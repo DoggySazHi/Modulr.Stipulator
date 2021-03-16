@@ -2,8 +2,10 @@ package org.junit.jupiter.api;
 
 import com.williamle.Modulr.Stipulator.Models.Exceptions.AssertionFailedException;
 import com.williamle.Modulr.Stipulator.Models.Exceptions.TestFailureException;
+import com.williamle.Modulr.Stipulator.Models.Runner;
 import com.williamle.Modulr.Stipulator.Settings;
 
+import java.time.Duration;
 import java.util.Objects;
 
 // Only exists for drop-in compatibility with JUnit 5.
@@ -164,9 +166,20 @@ public class Assertions {
                 return obj.toString();
             }
             catch (Exception ignore) {
-                return obj.getClass().getName() + "@" + System.identityHashCode(obj) + " (toString failed)";
+                return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj)) + " (toString failed)";
             }
         }
-        return obj.getClass().getName() + "@" + System.identityHashCode(obj);
+        return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
+    }
+
+    // assertThrows
+
+    public static void assertThrows(Duration duration, Runner function) {
+        var thrown = false;
+        try {
+            function.run();
+        } catch (Throwable ignore) {
+
+        }
     }
 }
