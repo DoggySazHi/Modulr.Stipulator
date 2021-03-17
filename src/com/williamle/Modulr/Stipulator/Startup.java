@@ -16,7 +16,7 @@ public class Startup {
     }
 
     private static void executeTests() {
-
+        tm.execute();
     }
 
     private static void cleanUp() {

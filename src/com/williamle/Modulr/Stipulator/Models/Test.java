@@ -1,19 +1,23 @@
 package com.williamle.Modulr.Stipulator.Models;
 
+import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 // A class to represent a test suite and its individual tests.
 public class Test {
     private final String name;
-    private final Map<String, Result> data;
+    private final Class<?> tester;
+    private final Map<Method, Result> data;
 
-    public Test(String name) {
+    public Test(String name, Class<?> tester) {
         this.name = name;
+        this.tester = tester;
         data = new HashMap<>();
     }
 
-    private static class Result {
+    public static class Result {
         private final boolean success;
         private final String message;
         private final long time;
@@ -26,6 +30,10 @@ public class Test {
 
         public Result(boolean success, String message) {
             this(success, message, 0);
+        }
+
+        public Result(boolean success, long time) {
+            this(success, null, 0);
         }
 
         public Result(boolean success) {
@@ -58,14 +66,34 @@ public class Test {
         return name;
     }
 
-    public boolean registerTest(String name) {
-        if (data.containsKey(name))
+    public Class<?> getTester() {
+        return tester;
+    }
+
+    public boolean registerTest(Method method) {
+        if (data.containsKey(method))
             return false;
-        data.putIfAbsent(name, null);
+        data.putIfAbsent(method, null);
         return true;
     }
 
-    public void setResults(String name, Result result) {
-        data.put(name, result);
+    public void setResults(Method method, Result result) {
+        data.put(method, result);
+    }
+
+    /**
+     * Only known for failing an entire class.
+     * @param result The result assigned to all testers.
+     */
+    public void setAllResults(Result result) {
+        data.replaceAll((k, v) -> result);
+    }
+
+    /**
+     * Get all methods and results associated with this test.
+     * @return An unmodifiable map containing methods and results.
+     */
+    public Map<Method, Result> getTestRelation() {
+        return Collections.unmodifiableMap(data);
     }
 }

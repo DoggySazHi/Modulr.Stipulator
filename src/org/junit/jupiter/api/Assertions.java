@@ -174,12 +174,14 @@ public class Assertions {
 
     // assertThrows
 
-    public static void assertThrows(Duration duration, Runner function) {
+    public static void assertThrows(Runner function) {
         var thrown = false;
         try {
             function.run();
         } catch (Throwable ignore) {
-
+            thrown = true;
         }
+        if (!thrown)
+            throw new AssertionFailedException("<exception thrown>", "<no exception>");
     }
 }
