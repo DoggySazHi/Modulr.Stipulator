@@ -1,4 +1,4 @@
-#Modulr.Stipulator
+# Modulr.Stipulator
 The new core for the server-based Java stipulator, written in ~~C#~~ Java.
 
 Because why not.
