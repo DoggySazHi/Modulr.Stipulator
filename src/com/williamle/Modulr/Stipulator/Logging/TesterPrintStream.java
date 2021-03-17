@@ -4,102 +4,121 @@ import java.io.PrintStream;
 
 public class TesterPrintStream extends PrintStream {
 
+    private final StringBuffer buffer;
+
     public TesterPrintStream() {
         super(System.out);
+        buffer = new StringBuffer();
     }
 
     @Override
     public void print(boolean b) {
-        super.print(b);
+        buffer.append(b);
     }
 
     @Override
     public void print(char c) {
-        super.print(c);
+        buffer.append(c);
     }
 
     @Override
     public void print(int i) {
-        super.print(i);
+        buffer.append(i);
     }
 
     @Override
     public void print(long l) {
-        super.print(l);
+        buffer.append(l);
     }
 
     @Override
     public void print(float f) {
-        super.print(f);
+        buffer.append(f);
     }
 
     @Override
     public void print(double d) {
-        super.print(d);
+        buffer.append(d);
     }
 
     @Override
     public void print(char[] s) {
-        super.print(s);
+        buffer.append(s);
     }
 
     @Override
     public void print(String s) {
-        super.print(s);
+        buffer.append(s);
     }
 
     @Override
     public void print(Object obj) {
-        super.print(obj);
+        buffer.append(obj);
     }
 
     @Override
     public void println() {
-        super.println();
+        buffer.append('\n');
     }
 
     @Override
     public void println(boolean x) {
-        super.println(x);
+        this.print(x);
+        this.println();
     }
 
     @Override
     public void println(char x) {
-        super.println(x);
+        this.print(x);
+        this.println();
     }
 
     @Override
     public void println(int x) {
-        super.println(x);
+        this.print(x);
+        this.println();
     }
 
     @Override
     public void println(long x) {
-        super.println(x);
+        this.print(x);
+        this.println();
     }
 
     @Override
     public void println(float x) {
-        super.println(x);
+        this.print(x);
+        this.println();
     }
 
     @Override
     public void println(double x) {
-        super.println(x);
+        this.print(x);
+        this.println();
     }
 
     @Override
     public void println(char[] x) {
-        super.println(x);
+        this.print(x);
+        this.println();
     }
 
     @Override
     public void println(String x) {
-        super.println(x);
+        this.print(x);
+        this.println();
     }
 
     @Override
     public void println(Object x) {
-        super.println(x);
+        this.print(x);
+        this.println();
+    }
+
+    public String getAndFlush() {
+        var output = buffer.toString();
+        buffer.setLength(0);
+        super.flush();
+        return output;
     }
 }

@@ -6,29 +6,29 @@ import java.util.Map;
 // A class to represent a test suite and its individual tests.
 public class Test {
     private final String name;
-    private final Map<String, Results> data;
+    private final Map<String, Result> data;
 
     public Test(String name) {
         this.name = name;
         data = new HashMap<>();
     }
 
-    private static class Results {
+    private static class Result {
         private final boolean success;
         private final String message;
         private final long time;
 
-        public Results(boolean success, String message, long time) {
+        public Result(boolean success, String message, long time) {
             this.success = success;
             this.message = message;
             this.time = time;
         }
 
-        public Results(boolean success, String message) {
+        public Result(boolean success, String message) {
             this(success, message, 0);
         }
 
-        public Results(boolean success) {
+        public Result(boolean success) {
             this(success, null);
         }
 
@@ -56,5 +56,16 @@ public class Test {
 
     public String getName() {
         return name;
+    }
+
+    public boolean registerTest(String name) {
+        if (data.containsKey(name))
+            return false;
+        data.putIfAbsent(name, null);
+        return true;
+    }
+
+    public void setResults(String name, Result result) {
+        data.put(name, result);
     }
 }
