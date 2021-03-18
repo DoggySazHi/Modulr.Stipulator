@@ -8,10 +8,10 @@ An attempt to replace JUnit as a test runner, Modulr.Stipulator is an attempt to
 
 Plus, I just wanted to control the way it prints output.
 ## Features
-- Less than JUnit, that's for sure.
+- [x] Less than JUnit, that's for sure.
   - A drop-in replacement for JUnit 5 suites, so there should be minimal rewriting.
-- Fuzzing, based on existing code samples (e.g. teacher code vs student code)
-- Live testing progress (with Modulr's websocket capability)
+- (W.I.P.) Fuzzing, based on existing code samples (e.g. teacher code vs student code)
+- (W.I.P.) Live testing progress (with Modulr's websocket capability)
 ## Contribution
 Just like the core Modulr project, for all problems, please place them in issues. PRs are welcome, though I'm not sure how to handle them.
 

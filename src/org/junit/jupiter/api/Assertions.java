@@ -6,6 +6,7 @@ import com.williamle.Modulr.Stipulator.Models.Runner;
 import com.williamle.Modulr.Stipulator.Settings;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Objects;
 
 // Only exists for drop-in compatibility with JUnit 5.
@@ -158,19 +159,54 @@ public class Assertions {
         assertEquals(expected, actual, null);
     }
 
-    private static String toStringObj(Object obj) {
-        if (obj == null)
-            return "null";
-        else if (Settings.UseToString) {
-            try {
-                return obj.toString();
-            }
-            catch (Exception ignore) {
-                return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj)) + " (toString failed)";
-            }
-        }
-        return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
+    // assertArrayEquals
+
+    public static void assertArrayEquals(boolean[] expected, boolean[] actual) {
+        if (Arrays.equals(expected, actual))
+            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual));
     }
+
+    public static void assertArrayEquals(byte[] expected, byte[] actual) {
+        if (Arrays.equals(expected, actual))
+            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual));
+    }
+
+    public static void assertArrayEquals(char[] expected, char[] actual) {
+        if (Arrays.equals(expected, actual))
+            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual));
+    }
+
+    public static void assertArrayEquals(double[] expected, double[] actual) {
+        if (Arrays.equals(expected, actual))
+            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual));
+    }
+
+    public static void assertArrayEquals(float[] expected, float[] actual) {
+        if (!Arrays.equals(expected, actual))
+            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual));
+    }
+
+    public static void assertArrayEquals(short[] expected, short[] actual) {
+        if (!Arrays.equals(expected, actual))
+            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual));
+    }
+
+    public static void assertArrayEquals(int[] expected, int[] actual) {
+        if (!Arrays.equals(expected, actual))
+            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual));
+    }
+
+    public static void assertArrayEquals(long[] expected, long[] actual) {
+        if (!Arrays.equals(expected, actual))
+            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual));
+    }
+
+    public static void assertArrayEquals(Object[] expected, Object[] actual) {
+        if (!Arrays.equals(expected, actual))
+            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual));
+    }
+
+    // assertNotEquals
 
     // assertThrows
 
@@ -183,5 +219,33 @@ public class Assertions {
         }
         if (!thrown)
             throw new AssertionFailedException("<exception thrown>", "<no exception>");
+    }
+
+    // assertNotThrow
+
+    public static void assertDoesNotThrow(Runner function) {
+        // I mean, it exists. Whether it's useful (since it'll get caught anyways), I don't know.
+        try {
+            function.run();
+        } catch (Throwable thrown) {
+            throw new AssertionFailedException("<no exception>", thrown.toString());
+        }
+    }
+
+
+    private static String toStringObj(Object obj) {
+        if (obj == null)
+            return "null";
+        else if (Settings.UseToString) {
+            try {
+                if (obj.getClass().isArray())
+                    return Arrays.deepToString((Object[]) obj);
+                return obj.toString();
+            }
+            catch (Exception ignore) {
+                return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj)) + " (toString failed)";
+            }
+        }
+        return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
     }
 }
