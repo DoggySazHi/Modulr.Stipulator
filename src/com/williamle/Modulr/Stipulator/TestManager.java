@@ -7,6 +7,7 @@ import com.williamle.Modulr.Stipulator.Models.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -141,6 +142,11 @@ public class TestManager {
                         .orElseThrow(() -> new BadTesterException(testSuite.getClass(), "No suitable empty constructor found"));
                 instance = constructor.newInstance();
             } catch (Throwable ex) {
+                if (ex instanceof InvocationTargetException) {
+                    var trueEx = (InvocationTargetException) ex;
+                    ex = trueEx.getCause();
+                }
+
                 testSuite.setAllResults(
                         new Test.Result(
                                 false,
@@ -158,6 +164,11 @@ public class TestManager {
                     else
                         method.invoke(instance);
                 } catch (Throwable ex) {
+                    if (ex instanceof InvocationTargetException) {
+                        var trueEx = (InvocationTargetException) ex;
+                        ex = trueEx.getCause();
+                    }
+
                     testSuite.setResults(
                             method,
                             new Test.Result(

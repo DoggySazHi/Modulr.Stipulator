@@ -2,6 +2,7 @@ package org.junit.jupiter.api;
 
 import com.williamle.Modulr.Stipulator.Models.Exceptions.AssertionFailedException;
 import com.williamle.Modulr.Stipulator.Models.Exceptions.TestFailureException;
+import com.williamle.Modulr.Stipulator.Models.Exceptions.TimeoutException;
 import com.williamle.Modulr.Stipulator.Models.Executable;
 import com.williamle.Modulr.Stipulator.Settings;
 
@@ -9,6 +10,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.TimeUnit;
 
 // Only exists for drop-in compatibility with JUnit 5.
 @SuppressWarnings("unused") // Also it's a library class, darn it!
@@ -530,12 +534,14 @@ public class Assertions {
         try {
             executable.run();
         } catch (Throwable ex) {
+            if (ex instanceof AssertionFailedException)
+                throw (AssertionFailedException) ex;
             throw new RuntimeException(ex); // Hope the TestManager catches this one!
         }
         var time = Duration.between(start, Instant.now());
         var duration = time.compareTo(timeout);
         if (duration > 0)
-            throw new AssertionFailedException("<" + timeout.toMillis() + "ms or less>", "<executed in " + time.toMillis() + "ms>", message);
+            throw new TimeoutException(timeout.toMillis(), time.toMillis(), message);
     }
 
     public static void assertTimeout(Duration timeout, Executable executable) {
@@ -545,7 +551,28 @@ public class Assertions {
     // assertTimeoutPreemptively
 
     public static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
-
+        var start = Instant.now();
+        try {
+            CompletableFuture.runAsync(() -> {
+                try {
+                    executable.run();
+                } catch (Throwable ex) {
+                    if (ex instanceof AssertionFailedException) // By us!
+                        throw (AssertionFailedException) ex;
+                    throw new RuntimeException(ex);
+                }
+            }).orTimeout(timeout.toMillis(), TimeUnit.MILLISECONDS).join();
+        } catch (Throwable ex) {
+            if (ex instanceof CompletionException)
+                ex = ex.getCause();
+            if (ex instanceof java.util.concurrent.TimeoutException) {
+                var time = Duration.between(start, Instant.now());
+                throw new TimeoutException(timeout.toMillis(), time.toMillis(), message);
+            }
+            else if (ex instanceof AssertionFailedException) // By us!
+                throw (AssertionFailedException) ex;
+            throw new RuntimeException(ex); // By them!
+        }
     }
 
     public static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
