@@ -7,7 +7,7 @@ import com.williamle.modulr.stipulator.models.LogSeverity;
 import java.io.IOException;
 
 public class Startup {
-    private static final String version = "1.0.10";
+    private static final String version = "1.0.12";
     private static TestManager tm;
 
     public static void main(String[] args) {

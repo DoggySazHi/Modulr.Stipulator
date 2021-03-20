@@ -14,7 +14,7 @@ public class TestManagerPrinter {
     private final TestManager tm;
     private Test currentTest;
     private String testSubstring;
-    private static final DecimalFormat SCORE_FORMAT = new DecimalFormat("#.00");
+    private static final DecimalFormat SCORE_FORMAT = new DecimalFormat("0.00");
 
     public TestManagerPrinter(TestManager tm) {
         this.tm = tm;
@@ -116,6 +116,8 @@ public class TestManagerPrinter {
         Logger.log(LogSeverity.INFO, "");
 
         var score = (double) testsPassed / (double) totalTests * 100.0;
+        if (totalTests == 0)
+            score = 0;
         Logger.log(testsFailed == 0 ? LogSeverity.INFO : LogSeverity.WARNING, "Score: " + SCORE_FORMAT.format(score) + "%");
     }
 }

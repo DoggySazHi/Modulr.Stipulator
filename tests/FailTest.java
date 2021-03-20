@@ -65,11 +65,8 @@ public class FailTest {
 
     @Test
     public void failAssertNotThrow() {
-        assertThrows(() -> {
-            var neko = 3;
-            var miko = 4;
-            var reimu = neko + miko;
-            var aiShiteru = neko / miko;
+        assertDoesNotThrow(() -> {
+            throw new RuntimeException("Mukyu!");
         });
     }
 

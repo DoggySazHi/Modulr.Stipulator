@@ -10,7 +10,10 @@ import java.util.List;
 public class Security extends SecurityManager {
 
     private final boolean allowRW;
-    private final List<String> DEFAULT_PROPERTIES = Arrays.asList("java.locale.providers", "locale.resources.debug", "resource.bundle.debug");
+    private final List<String> DEFAULT_PROPERTIES = Arrays.asList("java.locale.providers",
+            "locale.resources.debug",
+            "resource.bundle.debug",
+            "jdk.proxy.ProxyGenerator.v49");
     private final List<String> READ_WRITE_PROPERTIES = Arrays.asList("user.dir");
 
     private Security(boolean allowRW) {
