@@ -53,7 +53,7 @@ public class Settings {
                     if (arguments.size() > 1)
                         WriteLogOnExit = arguments.get(1).toLowerCase(Locale.ROOT).contains("t");
                     else
-                        WriteLogOnExit = false;
+                        WriteLogOnExit = true;
                     Logger.log(LogSeverity.VERBOSE, (WriteLogOnExit ? "Enabled" : "Disabled") + " writing logs on exit");
                     break;
                 case "--real-time":

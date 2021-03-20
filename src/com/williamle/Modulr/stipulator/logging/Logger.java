@@ -50,10 +50,11 @@ public class Logger {
      * Requires <code>Settings.AllowRW</code> to be <code>true</code>, otherwise it'll probably throw an <code>SecurityException</code>.
      * @param file A filename/path to dump to.
      */
-    public static void dumpLogToFile(String file) throws IOException {
+    public static String dumpLogToFile(String file) throws IOException {
         var out = Paths.get(file);
         if (!Files.exists(out))
             Files.createFile(out);
-        Files.writeString(out, log.stream().map(o -> "[" + o.getLogSeverity() + "] " + o.getMessage()).collect(Collectors.joining()), StandardOpenOption.APPEND);
+        Files.writeString(out, log.stream().map(o -> "[" + o.getLogSeverity() + "] " + o.getMessage()).collect(Collectors.joining("\n")));
+        return out.toAbsolutePath().normalize().toString();
     }
 }

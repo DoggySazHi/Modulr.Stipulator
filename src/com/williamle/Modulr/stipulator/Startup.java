@@ -35,9 +35,10 @@ public class Startup {
     private static void cleanUp() {
         if (Settings.WriteLogOnExit) {
             try {
-                Logger.dumpLogToFile("log.txt");
-            } catch (IOException e) {
-                Logger.log(LogSeverity.ERROR, "Failed to dump logs!\n" + e);
+                var output = Logger.dumpLogToFile("log.txt");
+                Logger.log(LogSeverity.INFO, "Saved logs to " + output);
+            } catch (Throwable ex) {
+                Logger.log(LogSeverity.ERROR, "Failed to dump logs!\n" + ex);
             }
         }
     }
