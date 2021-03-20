@@ -1,4 +1,4 @@
-package com.williamle.Modulr.Stipulator.Models;
+package com.williamle.modulr.stipulator.models;
 
 // Allows us to catch
 

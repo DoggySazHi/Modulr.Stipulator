@@ -1,24 +1,32 @@
-package com.williamle.Modulr.Stipulator;
+package com.williamle.modulr.stipulator;
 
-import com.williamle.Modulr.Stipulator.Logging.Logger;
-import com.williamle.Modulr.Stipulator.Models.Exceptions.BadTesterException;
-import com.williamle.Modulr.Stipulator.Models.LogSeverity;
-import com.williamle.Modulr.Stipulator.Models.Test;
+import com.williamle.modulr.stipulator.logging.Logger;
+import com.williamle.modulr.stipulator.models.exceptions.BadTesterException;
+import com.williamle.modulr.stipulator.models.LogSeverity;
+import com.williamle.modulr.stipulator.models.Test;
+import com.williamle.modulr.stipulator.models.exceptions.TestFailureException;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class TestManager {
 
     private final ClassLoader loader;
     private final List<Test> loadedTests;
+
+    private Consumer<Test> onStartSuite;
+    private Consumer<Method> onStartTest;
+    private Consumer<Method> onEndTest;
+    private Consumer<Test> onEndSuite;
+
     private static final Class<org.junit.jupiter.api.Test> TEST_ANNOTATION = org.junit.jupiter.api.Test.class;
 
     public TestManager() {
@@ -126,43 +134,18 @@ public class TestManager {
 
     public void execute() {
         for (var testSuite : loadedTests) {
-            var start = System.nanoTime();
-            Object instance = null;
-            try {
-                var constructor = Arrays.stream(testSuite.getTester().getDeclaredConstructors())
-                        .filter(o -> o.getParameterCount() == 0)
-                        .sorted(Comparator.comparingInt(a -> {
-                            if (Modifier.isPublic(a.getModifiers()))
-                                return 3;
-                            if (Modifier.isProtected(a.getModifiers()))
-                                return 2;
-                            return 1;
-                        })) // Sort by accessibility (mainly to avoid trying to call private constructors)
-                        .findFirst()
-                        .orElseThrow(() -> new BadTesterException(testSuite.getClass(), "No suitable empty constructor found"));
-                instance = constructor.newInstance();
-            } catch (Throwable ex) {
-                if (ex instanceof InvocationTargetException) {
-                    var trueEx = (InvocationTargetException) ex;
-                    ex = trueEx.getCause();
-                }
+            var instance = getInstance(testSuite);
 
-                testSuite.setAllResults(
-                        new Test.Result(
-                                false,
-                                ex.toString(),
-                                System.nanoTime() - start
-                        )
-                ); // Can't instantiate it. Might be a utility class.
-            }
-
+            triggerCallback(onStartSuite, testSuite);
             for(var method : testSuite.getTestRelation().keySet()) {
-                start = System.nanoTime();
+                triggerCallback(onStartTest, method);
+                var start = System.nanoTime();
                 try {
                     if (Modifier.isStatic(method.getModifiers()))
                         method.invoke(null);
-                    else
-                        method.invoke(instance);
+                    else if (instance == null)
+                        throw new BadTesterException("No suitable empty constructor found for non-static method");
+                    method.invoke(instance);
                 } catch (Throwable ex) {
                     if (ex instanceof InvocationTargetException) {
                         var trueEx = (InvocationTargetException) ex;
@@ -173,14 +156,94 @@ public class TestManager {
                             method,
                             new Test.Result(
                                     false,
-                                    ex.toString(),
-                                    System.nanoTime() - start
+                                    getMessage(ex),
+                                    System.nanoTime() - start,
+                                    Logger.getSystemRedirect().getAndFlush()
                             )
                     );
+                    triggerCallback(onEndTest, method);
                     continue;
                 }
                 testSuite.setResults(method, new Test.Result(true, System.nanoTime() - start));
+                triggerCallback(onEndTest, method);
             }
+            triggerCallback(onEndSuite, testSuite);
+        }
+    }
+
+    private Object getInstance(Test testSuite) {
+        var start = System.nanoTime();
+        try {
+            //TODO An attribute to annotate constructors that Modulr.Stipulator should use?
+            var constructor = Arrays.stream(testSuite.getTester().getDeclaredConstructors())
+                    .filter(o -> o.getParameterCount() == 0)
+                    .sorted(Comparator.comparingInt(a -> {
+                        if (Modifier.isPublic(a.getModifiers()))
+                            return 3;
+                        if (Modifier.isProtected(a.getModifiers()))
+                            return 2;
+                        return 1;
+                    })) // Sort by accessibility (mainly to avoid trying to call private constructors)
+                    .findFirst()
+                    .orElseThrow(() -> new BadTesterException(testSuite.getClass(), "No suitable empty constructor found"));
+            return constructor.newInstance();
+        } catch (Throwable ex) {
+            if (ex instanceof InvocationTargetException) {
+                var trueEx = (InvocationTargetException) ex;
+                ex = trueEx.getCause();
+            }
+
+            testSuite.setAllResults(
+                    new Test.Result(
+                            false,
+                            getMessage(ex),
+                            System.nanoTime() - start,
+                            Logger.getSystemRedirect().getAndFlush()
+                    )
+            ); // Can't instantiate it. Might be a utility class.
+        }
+        return null;
+    }
+
+    private String getMessage(Throwable ex) {
+        if (ex instanceof TestFailureException) {
+            return ex.getClass().getSimpleName() +
+                    (ex.getLocalizedMessage() != null ? ": " + ex.getLocalizedMessage() : "");
+        }
+        return ex.toString();
+    }
+
+    /**
+     * Get a list reference of all tests held loaded by this <code>TestManager</code>.
+     * @return A read-only list pointing to the internal list.
+     */
+    public List<Test> getLoadedTests() {
+        return Collections.unmodifiableList(loadedTests);
+    }
+
+    public void setOnSuiteStart(Consumer<Test> callback) {
+        onStartSuite = callback;
+    }
+
+    public void setOnTestStart(Consumer<Method> callback) {
+        onStartTest = callback;
+    }
+
+    public void setOnTestEnd(Consumer<Method> callback) {
+        onEndTest = callback;
+    }
+
+    public void setOnSuiteEnd(Consumer<Test> callback) {
+        onEndSuite = callback;
+    }
+
+    private <T> void triggerCallback(Consumer<T> callback, T obj) {
+        if (callback == null)
+            return;
+        try {
+            callback.accept(obj);
+        } catch (Throwable thrown){
+            Logger.log(LogSeverity.ERROR, "Callback " + callback + " threw an exception! Disabling.");
         }
     }
 }

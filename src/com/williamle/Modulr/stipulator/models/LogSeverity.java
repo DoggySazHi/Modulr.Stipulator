@@ -1,6 +1,7 @@
-package com.williamle.Modulr.Stipulator.Models;
+package com.williamle.modulr.stipulator.models;
 
 public enum LogSeverity {
+    NONE,
     ERROR,
     WARNING,
     INFO,

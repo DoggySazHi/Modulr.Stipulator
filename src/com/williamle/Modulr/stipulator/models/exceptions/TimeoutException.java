@@ -1,4 +1,4 @@
-package com.williamle.Modulr.Stipulator.Models.Exceptions;
+package com.williamle.modulr.stipulator.models.exceptions;
 
 public class TimeoutException extends TestFailureException {
     /**

@@ -1,4 +1,4 @@
-package com.williamle.Modulr.Stipulator.Models.Exceptions;
+package com.williamle.modulr.stipulator.models.exceptions;
 
 public class AssertionFailedException extends TestFailureException {
     public AssertionFailedException(String expected, String actual, String message) {

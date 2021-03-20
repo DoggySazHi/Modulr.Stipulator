@@ -1,18 +1,19 @@
-package com.williamle.Modulr.Stipulator;
+package com.williamle.modulr.stipulator;
 
-import com.williamle.Modulr.Stipulator.Logging.Logger;
-import com.williamle.Modulr.Stipulator.Models.LogSeverity;
+import com.williamle.modulr.stipulator.logging.Logger;
+import com.williamle.modulr.stipulator.models.LogSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 // A public, all static class to hold state information.
 public class Settings {
     public static boolean AllowRW = false;
-    public static boolean UseToString = false;
+    public static boolean UseToString = true;
     public static LogSeverity LogLevel = LogSeverity.VERBOSE;
+    public static boolean WriteLogOnExit = false;
+    public static boolean WriteInRealTime = false;
 
     public static void loadFromCommandLine(String[] args) {
         final var currentArg = new ArrayList<String>();
@@ -35,15 +36,32 @@ public class Settings {
                     Logger.log(LogSeverity.VERBOSE, "Set log level to " + LogLevel);
                     break;
                 case "--use-to-string":
-                    UseToString = arguments.get(1).toLowerCase(Locale.ROOT).contains("t");
+                    if (arguments.size() > 1)
+                        UseToString = arguments.get(1).toLowerCase(Locale.ROOT).contains("t");
+                    else
+                        UseToString = true;
                     Logger.log(LogSeverity.VERBOSE, (UseToString ? "Enabled" : "Disabled") + " printing overridden toStrings");
                     break;
                 case "--allow-rw":
                     if (arguments.size() > 1)
                         AllowRW = arguments.get(1).toLowerCase(Locale.ROOT).contains("t");
                     else
-                        AllowRW = true;
-                    Logger.log(LogSeverity.VERBOSE, (UseToString ? "Enabled" : "Disabled") + " reading/writing to FS");
+                        AllowRW = false;
+                    Logger.log(LogSeverity.VERBOSE, (AllowRW ? "Enabled" : "Disabled") + " reading/writing to FS");
+                    break;
+                case "--write-log-on-exit":
+                    if (arguments.size() > 1)
+                        WriteLogOnExit = arguments.get(1).toLowerCase(Locale.ROOT).contains("t");
+                    else
+                        WriteLogOnExit = false;
+                    Logger.log(LogSeverity.VERBOSE, (WriteLogOnExit ? "Enabled" : "Disabled") + " writing logs on exit");
+                    break;
+                case "--real-time":
+                    if (arguments.size() > 1)
+                        WriteInRealTime = arguments.get(1).toLowerCase(Locale.ROOT).contains("t");
+                    else
+                        WriteInRealTime = false;
+                    Logger.log(LogSeverity.VERBOSE, (WriteInRealTime ? "Enabled" : "Disabled") + " real-time output");
                     break;
             }
         } catch (Exception ex) {

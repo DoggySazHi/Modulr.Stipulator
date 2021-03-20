@@ -1,4 +1,4 @@
-package com.williamle.Modulr.Stipulator.Models;
+package com.williamle.modulr.stipulator.models;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -21,23 +21,25 @@ public class Test {
         private final boolean success;
         private final String message;
         private final long time;
+        private final String output;
 
-        public Result(boolean success, String message, long time) {
+        public Result(boolean success, String message, long time, String output) {
             this.success = success;
             this.message = message;
             this.time = time;
+            this.output = output;
         }
 
         public Result(boolean success, String message) {
-            this(success, message, 0);
+            this(success, message, 0, null);
         }
 
         public Result(boolean success, long time) {
-            this(success, null, 0);
+            this(success, null, 0, null);
         }
 
         public Result(boolean success) {
-            this(success, null);
+            this(success, null, 0, null);
         }
 
         /**
@@ -55,6 +57,7 @@ public class Test {
         }
 
         /**
+         * A generic time value. Usually in nanoseconds, implementation is not defined.
          * @return The amount of time that the test method took to execute. May be 0, if unimplemented.
          */
         public long getTime() {

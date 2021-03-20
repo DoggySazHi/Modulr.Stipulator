@@ -1,10 +1,10 @@
 package org.junit.jupiter.api;
 
-import com.williamle.Modulr.Stipulator.Models.Exceptions.AssertionFailedException;
-import com.williamle.Modulr.Stipulator.Models.Exceptions.TestFailureException;
-import com.williamle.Modulr.Stipulator.Models.Exceptions.TimeoutException;
-import com.williamle.Modulr.Stipulator.Models.Executable;
-import com.williamle.Modulr.Stipulator.Settings;
+import com.williamle.modulr.stipulator.models.exceptions.AssertionFailedException;
+import com.williamle.modulr.stipulator.models.exceptions.TestFailureException;
+import com.williamle.modulr.stipulator.models.exceptions.TimeoutException;
+import com.williamle.modulr.stipulator.models.Executable;
+import com.williamle.modulr.stipulator.Settings;
 
 import java.time.Duration;
 import java.time.Instant;

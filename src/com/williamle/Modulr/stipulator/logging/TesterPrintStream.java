@@ -1,4 +1,4 @@
-package com.williamle.Modulr.Stipulator.Logging;
+package com.williamle.modulr.stipulator.logging;
 
 import java.io.PrintStream;
 

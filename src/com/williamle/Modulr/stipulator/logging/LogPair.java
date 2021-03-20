@@ -1,6 +1,6 @@
-package com.williamle.Modulr.Stipulator.Logging;
+package com.williamle.modulr.stipulator.logging;
 
-import com.williamle.Modulr.Stipulator.Models.LogSeverity;
+import com.williamle.modulr.stipulator.models.LogSeverity;
 
 public class LogPair {
     private final LogSeverity logSeverity;

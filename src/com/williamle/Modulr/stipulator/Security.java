@@ -1,4 +1,4 @@
-package com.williamle.Modulr.Stipulator;
+package com.williamle.modulr.stipulator;
 
 import java.io.FileDescriptor;
 
