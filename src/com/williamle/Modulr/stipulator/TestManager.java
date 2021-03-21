@@ -22,10 +22,12 @@ public class TestManager {
     private final ClassLoader loader;
     private final List<Test> loadedTests;
 
+    private Consumer<TestManager> onStartAll;
     private Consumer<Test> onStartSuite;
     private Consumer<Method> onStartTest;
     private Consumer<Method> onEndTest;
     private Consumer<Test> onEndSuite;
+    private Consumer<TestManager> onEndAll;
 
     private static final Class<org.junit.jupiter.api.Test> TEST_ANNOTATION = org.junit.jupiter.api.Test.class;
 
@@ -133,6 +135,7 @@ public class TestManager {
     }
 
     public void execute() {
+        triggerCallback(onStartAll, this);
         for (var testSuite : loadedTests) {
             var instance = getInstance(testSuite);
 
@@ -169,6 +172,7 @@ public class TestManager {
             }
             triggerCallback(onEndSuite, testSuite);
         }
+        triggerCallback(onEndAll, this);
     }
 
     private Object getInstance(Test testSuite) {
@@ -221,6 +225,10 @@ public class TestManager {
         return Collections.unmodifiableList(loadedTests);
     }
 
+    public void setOnAllStart(Consumer<TestManager> callback) {
+        onStartAll = callback;
+    }
+
     public void setOnSuiteStart(Consumer<Test> callback) {
         onStartSuite = callback;
     }
@@ -235,6 +243,10 @@ public class TestManager {
 
     public void setOnSuiteEnd(Consumer<Test> callback) {
         onEndSuite = callback;
+    }
+
+    public void setOnAllEnd(Consumer<TestManager> callback) {
+        onEndAll = callback;
     }
 
     private <T> void triggerCallback(Consumer<T> callback, T obj) {

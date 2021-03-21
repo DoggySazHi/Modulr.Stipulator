@@ -18,6 +18,10 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused") // Also it's a library class, darn it!
 public class Assertions {
 
+    public static void fail() {
+        throw new TestFailureException();
+    }
+
     public static void fail(String message) {
         throw new TestFailureException(message);
     }

@@ -85,4 +85,19 @@ public class FailTest {
             while (System.currentTimeMillis() - now < 2000) {}
         });
     }
+
+    @Test
+    public void failWithMessage() {
+        fail("Generic message.");
+    }
+
+    @Test
+    public void failAssertionWithMessage() {
+        assertEquals(27285, "2HU", "Generic message.");
+    }
+
+    @Test
+    public void failByException() {
+        Integer.parseInt("lol");
+    }
 }
