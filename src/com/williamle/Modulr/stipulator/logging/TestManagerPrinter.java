@@ -130,61 +130,18 @@ public class TestManagerPrinter {
      * Note that this method does not execute tests by default.
      */
     public void print() {
-        totalTime = 0;
-        suitesPassed = 0;
-        suitesFailed = 0;
-        testsPassed = 0;
-        testsFailed = 0;
+        onAllStart(tm);
 
         for (var suite : tm.getLoadedTests()) {
-            Logger.log(LogSeverity.INFO, "[" + suite.getName() + "]");
-            suitePassed = true;
-            for (var test : suite.getTestRelation().entrySet()) {
-                var method = test.getKey();
-                var result = test.getValue();
-
-                var time = "";
-
-                var message = "- " + method.getName();
-
-                if (result.getTime() >= 0) {
-                    time = (result.getTime() / 1000000L) + "ms";
-                    totalTime += result.getTime();
-                }
-
-                if (result.isSuccessful()) {
-                    ++testsPassed;
-                    message += " [PASS " + time + "]";
-                } else {
-                    ++testsFailed;
-                    suitePassed = false;
-                    message += " [FAIL " + time + "]";
-                }
-                if (result.getMessage() != null)
-                    message += "\n  - " + result.getMessage();
-                Logger.log(LogSeverity.INFO, message);
+            currentTest = suite;
+            onSuiteStart(currentTest);
+            for (var test : suite.getTestRelation().keySet()) {
+                onTestStart(test);
+                onTestEnd(test);
             }
-            if (suitePassed)
-                ++suitesPassed;
-            else
-                ++suitesFailed;
+            onSuiteEnd(currentTest);
         }
 
-        var totalSuites = suitesPassed + suitesFailed;
-        var totalTests = testsPassed + testsFailed;
-
-        Logger.log(LogSeverity.INFO, totalTests + " test" + (totalTests == 1 ? "" : "s") +
-                " in " + totalSuites + " suite" + (totalSuites == 1 ? "" : "s") +
-                " finished in " + (totalTime / 1000000L) + "ms");
-        Logger.log(LogSeverity.INFO, "- " + testsPassed + " test" + (testsPassed == 1 ? "" : "s") + " passed");
-        Logger.log(LogSeverity.INFO, "- " + testsFailed + " test" + (testsFailed == 1 ? "" : "s") + " failed");
-        Logger.log(LogSeverity.INFO, "- " + suitesPassed + " suite" + (suitesPassed == 1 ? "" : "s") + " passed");
-        Logger.log(LogSeverity.INFO, "- " + suitesFailed + " suite" + (suitesFailed == 1 ? "" : "s") + " failed");
-        Logger.log(LogSeverity.INFO, "");
-
-        var score = (double) testsPassed / (double) totalTests * 100.0;
-        if (totalTests == 0)
-            score = 0;
-        Logger.log(testsFailed == 0 ? LogSeverity.INFO : LogSeverity.WARNING, "Score: " + SCORE_FORMAT.format(score) + "%");
+        onAllEnd(tm);
     }
 }

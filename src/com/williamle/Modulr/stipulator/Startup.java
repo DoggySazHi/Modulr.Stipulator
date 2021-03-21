@@ -5,7 +5,7 @@ import com.williamle.modulr.stipulator.logging.TestManagerPrinter;
 import com.williamle.modulr.stipulator.models.LogSeverity;
 
 public class Startup {
-    private static final String version = "1.0.12";
+    private static final String version = "1.1.0";
     private static TestManager tm;
 
     public static void main(String[] args) {
