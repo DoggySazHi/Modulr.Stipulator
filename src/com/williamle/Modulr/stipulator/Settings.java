@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 public class Settings {
     public static boolean AllowRW = false;
     public static boolean UseToString = true;
-    public static LogSeverity LogLevel = LogSeverity.VERBOSE;
+    public static LogSeverity LogLevel = LogSeverity.INFO;
     public static boolean WriteLogOnExit = false;
-    public static boolean WriteInRealTime = false;
+    public static boolean WriteInRealTime = true;
     public static boolean GenerateCSV = false;
     public static boolean PrintFailMessages = true;
 

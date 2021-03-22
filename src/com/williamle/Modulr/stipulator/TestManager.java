@@ -17,6 +17,9 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * The heart of Modulr.Stipulator, all tests are reflected and executed here.
+ */
 public class TestManager {
 
     private final ClassLoader loader;
@@ -54,6 +57,8 @@ public class TestManager {
         // Shouldn't use classLoader.getDefinedPackages(), as it can include debugger classes loaded.
         var allClassFiles = new ArrayList<String>();
         var classLoader = loader;
+        Logger.log(LogSeverity.VERBOSE, "Looking at loader " + classLoader.getName());
+        Logger.log(LogSeverity.VERBOSE, System.getProperty("java.class.path"));
         try {
             var classes = classLoader.getResources("").asIterator();
             while (classes.hasNext()) { // Fetch all class paths, then convert the directories to package name. We hope it's correct.
@@ -64,6 +69,7 @@ public class TestManager {
                 if (IS_WINDOWS) {
                     path = path.replaceAll("/([A-Z]):", "$1:").replace("/", "\\");
                 }
+                Logger.log(LogSeverity.VERBOSE, "Classpath loading at " + path);
                 var classPath = new File(path);
                 searchPath(classPath, classFiles);
 
