@@ -280,9 +280,15 @@ public class Assertions {
 
     // assertNotEquals
 
+    private static AssertionFailedException failNotEquals(String expected, String actual, String message) {
+        return new AssertionFailedException((message != null ? "\n- " + message + "\n- " : "") + "Didn't expect equality between [" + expected + "] but was! [" + actual + "]");
+    }
+
+    private static void failNotEquals(String expected, String actual) { failNotEquals(expected, actual, null); }
+
     public static void assertNotEquals(boolean expected, boolean actual, String message) {
         if (expected == actual)
-            throw new AssertionFailedException(expected + "", actual + "", message);
+            throw failNotEquals(expected + "", actual + "", message);
     }
 
     public static void assertNotEquals(boolean expected, boolean actual) {
@@ -291,7 +297,7 @@ public class Assertions {
 
     public static void assertNotEquals(byte expected, byte actual, String message) {
         if (expected == actual)
-            throw new AssertionFailedException(expected + "", actual + "", message);
+            throw failNotEquals(expected + "", actual + "", message);
     }
 
     public static void assertNotEquals(byte expected, byte actual) {
@@ -300,7 +306,7 @@ public class Assertions {
 
     public static void assertNotEquals(char expected, char actual, String message) {
         if (expected == actual)
-            throw new AssertionFailedException(expected + "", actual + "", message);
+            throw failNotEquals(expected + "", actual + "", message);
     }
 
     public static void assertNotEquals(char expected, char actual) {
@@ -309,7 +315,7 @@ public class Assertions {
 
     public static void assertNotEquals(double expected, double actual, double delta, String message) {
         if (Math.abs(expected - actual) <= delta)
-            throw new AssertionFailedException(expected + "", actual + "", message);
+            throw failNotEquals(expected + "", actual + "", message);
     }
 
     public static void assertNotEquals(double expected, double actual, double delta) {
@@ -326,7 +332,7 @@ public class Assertions {
 
     public static void assertNotEquals(float expected, float actual, float delta, String message) {
         if (Math.abs(expected - actual) <= delta)
-            throw new AssertionFailedException(expected + "", actual + "", message);
+            throw failNotEquals(expected + "", actual + "", message);
     }
 
     public static void assertNotEquals(float expected, float actual, String message) {
@@ -343,7 +349,7 @@ public class Assertions {
 
     public static void assertNotEquals(short expected, short actual, String message) {
         if (expected == actual)
-            throw new AssertionFailedException(expected + "", actual + "", message);
+            throw failNotEquals(expected + "", actual + "", message);
     }
 
     public static void assertNotEquals(short expected, short actual) {
@@ -352,7 +358,7 @@ public class Assertions {
 
     public static void assertNotEquals(int expected, int actual, String message) {
         if (expected == actual)
-            throw new AssertionFailedException(expected + "", actual + "", message);
+            throw failNotEquals(expected + "", actual + "", message);
     }
 
     public static void assertNotEquals(int expected, int actual) {
@@ -361,7 +367,7 @@ public class Assertions {
 
     public static void assertNotEquals(long expected, long actual, String message) {
         if (expected == actual)
-            throw new AssertionFailedException(expected + "", actual + "", message);
+            throw failNotEquals(expected + "", actual + "", message);
     }
 
     public static void assertNotEquals(long expected, long actual) {
@@ -369,7 +375,7 @@ public class Assertions {
     }
 
     public static void assertNotEquals(Object expected, Object actual, String message) {
-        var exception = new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+        var exception = failNotEquals(toStringObj(expected), toStringObj(actual), message);
         if ((expected == null) ^ (actual == null)) // If only one is null, return early.
             return;
         if (expected == null) // If both are null, raise the exception.
@@ -390,7 +396,7 @@ public class Assertions {
 
     public static void assertArrayNotEquals(boolean[] expected, boolean[] actual, String message) {
         if (Arrays.equals(expected, actual))
-            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
     }
 
     public static void assertArrayNotEquals(boolean[] expected, boolean[] actual) {
@@ -399,7 +405,7 @@ public class Assertions {
 
     public static void assertArrayNotEquals(byte[] expected, byte[] actual, String message) {
         if (Arrays.equals(expected, actual))
-            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
     }
 
     public static void assertArrayNotEquals(byte[] expected, byte[] actual) {
@@ -408,7 +414,7 @@ public class Assertions {
 
     public static void assertArrayNotEquals(char[] expected, char[] actual, String message) {
         if (Arrays.equals(expected, actual))
-            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
     }
 
     public static void assertArrayNotEquals(char[] expected, char[] actual) {
@@ -417,7 +423,7 @@ public class Assertions {
 
     @SuppressWarnings("DuplicatedCode") // Because I don't know the best way other than actually repeating.
     public static void assertArrayNotEquals(double[] expected, double[] actual, String message, double delta) {
-        var exception = new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+        var exception = failNotEquals(toStringObj(expected), toStringObj(actual), message);
         if (expected.length != actual.length)
             throw exception;
         for (var i = 0; i < expected.length; i++)
@@ -435,7 +441,7 @@ public class Assertions {
 
     @SuppressWarnings("DuplicatedCode")
     public static void assertArrayNotEquals(float[] expected, float[] actual, String message, float delta) {
-        var exception = new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+        var exception = failNotEquals(toStringObj(expected), toStringObj(actual), message);
         if (expected.length != actual.length)
             throw exception;
         for (var i = 0; i < expected.length; i++)
@@ -453,7 +459,7 @@ public class Assertions {
 
     public static void assertArrayNotEquals(short[] expected, short[] actual, String message) {
         if (Arrays.equals(expected, actual))
-            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
     }
 
     public static void assertArrayNotEquals(short[] expected, short[] actual) {
@@ -462,7 +468,7 @@ public class Assertions {
 
     public static void assertArrayNotEquals(int[] expected, int[] actual, String message) {
         if (Arrays.equals(expected, actual))
-            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
     }
 
     public static void assertArrayNotEquals(int[] expected, int[] actual) {
@@ -471,7 +477,7 @@ public class Assertions {
 
     public static void assertArrayNotEquals(long[] expected, long[] actual, String message) {
         if (Arrays.equals(expected, actual))
-            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
     }
 
     public static void assertArrayNotEquals(long[] expected, long[] actual) {
@@ -480,7 +486,7 @@ public class Assertions {
 
     public static void assertArrayNotEquals(Object[] expected, Object[] actual, String message) {
         if (Arrays.equals(expected, actual))
-            throw new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
+            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
     }
 
     public static void assertArrayNotEquals(Object[] expected, Object[] actual) {

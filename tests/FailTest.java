@@ -1,6 +1,11 @@
 import org.junit.jupiter.api.Test;
 
+import java.io.FileOutputStream;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.time.Duration;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,6 +44,32 @@ public class FailTest {
     @Test
     public void failAssertEquals4() {
         assertEquals(9L, (short) 420);
+    }
+
+    @Test
+    public void failAssertNotEquals0() {
+        assertNotEquals("A", "A");
+    }
+
+    @Test
+    public void failAssertNotEquals1() {
+        assertNotEquals(null, null);
+    }
+
+    @Test
+    public void failAssertNotEquals2() {
+        var obj = new Object();
+        assertNotEquals(obj, obj);
+    }
+
+    @Test
+    public void failAssertNotEquals3() {
+        assertNotEquals(Arrays.asList("Mukyu", "Patchouli"), Arrays.asList("Mukyu", "Patchouli"));
+    }
+
+    @Test
+    public void failAssertNotEquals4() {
+        assertNotEquals(9L, 9L);
     }
 
     @Test
@@ -97,7 +128,38 @@ public class FailTest {
     }
 
     @Test
-    public void failByException() {
+    public void failByException0() {
         Integer.parseInt("lol");
+    }
+
+    @Test
+    public void failByException1() {
+        Integer asdf = null;
+        asdf += 1;
+    }
+
+    @Test
+    public void failByException2() {
+        assertTimeout(Duration.ofSeconds(1), () -> {
+            Integer asdf = null;
+            asdf += 1;
+        });
+    }
+
+    @Test
+    public void failByException3() {
+        assertTimeoutPreemptively(Duration.ofSeconds(1), () -> {
+            assertTrue(false);
+        });
+    }
+
+    @Test
+    public void failByException4() {
+        assertTimeoutPreemptively(Duration.ofSeconds(1), () -> {
+            var website = new URL("https://williamle.com");
+            var stream = Channels.newChannel(website.openStream());
+            var output = new FileOutputStream("index.html");
+            output.getChannel().transferFrom(stream, 0, Long.MAX_VALUE);
+        });
     }
 }
