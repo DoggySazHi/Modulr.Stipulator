@@ -8,7 +8,6 @@ import com.williamle.modulr.stipulator.models.LogSeverity;
  * The main class to run the entire Stipulator.
  */
 public class Startup {
-    private static final String version = "1.1.1";
     private static TestManager tm;
 
     /**
@@ -16,7 +15,7 @@ public class Startup {
      * @param args Command-line arguments.
      */
     public static void main(String[] args) {
-        Logger.log(LogSeverity.INFO, "Running Modulr.Stipulator " + version);
+        Logger.log(LogSeverity.INFO, "Running Modulr.Stipulator " + Settings.VERSION);
         Settings.loadFromCommandLine(args);
         initialize();
         executeTests();

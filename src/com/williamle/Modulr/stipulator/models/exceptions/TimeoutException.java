@@ -9,7 +9,7 @@ public class TimeoutException extends TestFailureException {
      */
     public TimeoutException(long time, long realTime, String message) {
         super(
-                (message != null ? message + "\n - " : "") +
+                (message != null ? message + "\n  - " : "") +
                 "Execution timed out after " + time + "ms" +
                 (realTime >= 0 ? " (" + realTime + "ms)" : "")
         );

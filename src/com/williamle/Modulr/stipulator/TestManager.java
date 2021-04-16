@@ -181,6 +181,12 @@ public class TestManager {
         triggerCallback(onEndAll, this);
     }
 
+    /**
+     * Find a good constructor to build the test suite from, then create an instance.
+     * @param testSuite The test suite to create an instance for.
+     * @throws BadTesterException If the class cannot be instantiated, either via missing constructors or internally-thrown exceptions.
+     * @return An object representing the test suite.
+     */
     private Object getInstance(Test testSuite) {
         var start = System.nanoTime();
         try {

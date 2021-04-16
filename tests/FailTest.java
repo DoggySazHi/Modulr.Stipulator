@@ -13,68 +13,68 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FailTest {
     @Test
     public void failAssertTrue() {
-        assertTrue(false);
+        assertTrue(false, "Failed assertTrue");
     }
 
     @Test
     public void failAssertFalse() {
-        assertFalse(true);
+        assertFalse(true, "Failed assertFalse");
     }
 
     @Test
     public void failAssertEquals0() {
-        assertEquals("A", "B");
+        assertEquals("A", "B", "Failed assertEquals");
     }
 
     @Test
     public void failAssertEquals1() {
-        assertEquals(null, "B");
+        assertEquals(null, "B", "Failed assertEquals");
     }
 
     @Test
     public void failAssertEquals2() {
-        assertEquals(new Object(), null);
+        assertEquals(new Object(), null, "Failed assertEquals");
     }
 
     @Test
     public void failAssertEquals3() {
-        assertEquals(6, new double[0]);
+        assertEquals(6, new double[0], "Failed assertEquals");
     }
 
     @Test
     public void failAssertEquals4() {
-        assertEquals(9L, (short) 420);
+        assertEquals(9L, (short) 420, "Failed assertEquals");
     }
 
     @Test
     public void failAssertNotEquals0() {
-        assertNotEquals("A", "A");
+        assertNotEquals("A", "A", "Failed assertNotEquals");
     }
 
     @Test
     public void failAssertNotEquals1() {
-        assertNotEquals(null, null);
+        assertNotEquals(null, null, "Failed assertNotEquals");
     }
 
     @Test
     public void failAssertNotEquals2() {
         var obj = new Object();
-        assertNotEquals(obj, obj);
+        assertNotEquals(obj, obj, "Failed assertNotEquals");
     }
 
     @Test
     public void failAssertNotEquals3() {
-        assertNotEquals(Arrays.asList("Mukyu", "Patchouli"), Arrays.asList("Mukyu", "Patchouli"));
+        assertNotEquals(Arrays.asList("Mukyu", "Patchouli"), Arrays.asList("Mukyu", "Patchouli"), "Failed assertNotEquals");
     }
 
     @Test
     public void failAssertNotEquals4() {
-        assertNotEquals(9L, 9L);
+        assertNotEquals(9L, 9L, "Failed assertNotEquals");
     }
 
     @Test
     public void failAssertNull() {
-        assertNull(new Object());
+        assertNull(new Object(), "Failed assertNull");
     }
 
     @Test
@@ -84,21 +84,21 @@ public class FailTest {
             var miko = 4;
             var reimu = neko + miko;
             var aiShiteru = neko / miko;
-        });
+        }, "Failed assertThrows");
     }
 
     @Test
     public void failAssertThrows1() {
         assertThrows(() -> {
             var goodMath = 5 / 0;
-        }, UnsupportedOperationException.class);
+        }, UnsupportedOperationException.class, "Failed assertThrows");
     }
 
     @Test
     public void failAssertNotThrow() {
         assertDoesNotThrow(() -> {
             throw new RuntimeException("Mukyu!");
-        });
+        }, "Failed assertNotThrow");
     }
 
     @Test
@@ -106,7 +106,7 @@ public class FailTest {
         assertTimeout(Duration.ofSeconds(1), () -> {
             var now = System.currentTimeMillis();
             while (System.currentTimeMillis() - now < 2000) {}
-        });
+        }, "Failed assertTimeout");
     }
 
     @Test
@@ -114,7 +114,7 @@ public class FailTest {
         assertTimeoutPreemptively(Duration.ofSeconds(1), () -> {
             var now = System.currentTimeMillis();
             while (System.currentTimeMillis() - now < 2000) {}
-        });
+        }, "Failed assertTimeoutPreemptively");
     }
 
     @Test
@@ -160,6 +160,6 @@ public class FailTest {
             var stream = Channels.newChannel(website.openStream());
             var output = new FileOutputStream("index.html");
             output.getChannel().transferFrom(stream, 0, Long.MAX_VALUE);
-        });
+        }, "Failed assertTimeoutPreemptively with exception");
     }
 }
