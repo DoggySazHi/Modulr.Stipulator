@@ -284,7 +284,7 @@ public class Assertions {
         return new AssertionFailedException((message != null ? "\n- " + message + "\n- " : "") + "Didn't expect equality between [" + expected + "] but was! [" + actual + "]");
     }
 
-    private static void failNotEquals(String expected, String actual) { failNotEquals(expected, actual, null); }
+    private static AssertionFailedException failNotEquals(String expected, String actual) { return failNotEquals(expected, actual, null); }
 
     public static void assertNotEquals(boolean expected, boolean actual, String message) {
         if (expected == actual)

@@ -38,6 +38,10 @@ public class Test {
             this(success, null, 0, null);
         }
 
+        /**
+         * A result that shows success or failure.
+         * @param success Whether the test was successful or not.
+         */
         public Result(boolean success) {
             this(success, null, 0, null);
         }
@@ -63,23 +67,45 @@ public class Test {
         public long getTime() {
             return time;
         }
+
+        /**
+         * Get all logged output created from <code>System.out</code> and <code>System.err</code>.
+         * @return Output created by the tested method.
+         */
+        public String getOutput() {
+            return output;
+        }
     }
 
+    /**
+     * Get the name of the current test suite.
+     * @return The name of the current test suite.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get the current test suite class.
+     * @return A class object, representing the test suite.
+     */
     public Class<?> getTester() {
         return tester;
     }
 
-    public boolean registerTest(Method method) {
-        if (data.containsKey(method))
-            return false;
+    /**
+     * Allocate a slot for a given method.
+     * @param method The method found in the test suite.
+     */
+    public void registerTest(Method method) {
         data.putIfAbsent(method, null);
-        return true;
     }
 
+    /**
+     * Store the test results after running the specific method.
+     * @param method The method found in the test suite.
+     * @param result Output data that was recorded after executing the method.
+     */
     public void setResults(Method method, Result result) {
         data.put(method, result);
     }

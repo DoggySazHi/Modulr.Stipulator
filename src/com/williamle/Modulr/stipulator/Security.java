@@ -5,6 +5,7 @@ import com.williamle.modulr.stipulator.models.LogSeverity;
 
 import java.io.FileDescriptor;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Security extends SecurityManager {
@@ -14,7 +15,7 @@ public class Security extends SecurityManager {
             "locale.resources.debug",
             "resource.bundle.debug",
             "jdk.proxy.ProxyGenerator.v49");
-    private final List<String> READ_WRITE_PROPERTIES = Arrays.asList("user.dir");
+    private final List<String> READ_WRITE_PROPERTIES = Collections.singletonList("user.dir");
 
     private Security(boolean allowRW) {
         super();

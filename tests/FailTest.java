@@ -3,7 +3,6 @@ import org.junit.jupiter.api.Test;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.time.Duration;
 import java.util.Arrays;
 

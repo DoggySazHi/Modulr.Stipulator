@@ -55,6 +55,10 @@ public class TestManagerPrinter {
         Logger.log(LogSeverity.VERBOSE, "Removed TestManager callbacks.");
     }
 
+    /**
+     * Reset all internal parameters.
+     * @param t The test manager, triggered by the callback.
+     */
     private void onAllStart(TestManager t) {
         totalTime = 0;
         suitesPassed = 0;
@@ -63,17 +67,29 @@ public class TestManagerPrinter {
         testsFailed = 0;
     }
 
+    /**
+     * Print the current name of the suite.
+     * @param t The test, triggered by the callback.
+     */
     private void onSuiteStart(Test t) {
         currentTest = t;
         Logger.log(LogSeverity.INFO, "[" + t.getName() + "]");
     }
 
+    /**
+     * Print the current test name.
+     * @param m The method, triggered by the callback.
+     */
     private void onTestStart(Method m) {
         testSubstring = "- " + m.getName() + "() ...";
         suitePassed = true;
         Logger.mainOutput.print(testSubstring);
     }
 
+    /**
+     * Print the results of the current test, filling in the blanks of the previous callbacks.
+     * @param method The method, triggered by the callback.
+     */
     private void onTestEnd(Method method) {
         var result = currentTest.getTestRelation().get(method);
 
@@ -99,6 +115,10 @@ public class TestManagerPrinter {
         Logger.mainOutput.println(message);
     }
 
+    /**
+     * Record whether the suite passed or not.
+     * @param t The test, triggered by the callback.
+     */
     private void onSuiteEnd(Test t) {
         if (suitePassed)
             ++suitesPassed;
@@ -106,6 +126,10 @@ public class TestManagerPrinter {
             ++suitesFailed;
     }
 
+    /**
+     * Calculate test statistics for all test suites in the <code>TestManager</code>
+     * @param t The test manager, triggered by the callback.
+     */
     private void onAllEnd(TestManager t) {
         var totalSuites = suitesPassed + suitesFailed;
         var totalTests = testsPassed + testsFailed;

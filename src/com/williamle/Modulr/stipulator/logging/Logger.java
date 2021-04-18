@@ -11,6 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The main logging class for Modulr.Stipulator.
+ * It has the responsibility of collecting printed output for saving to a file and reducing spam.
+ */
 public class Logger {
     static final List<LogPair> log;
     static final PrintStream mainOutput;
@@ -26,6 +30,11 @@ public class Logger {
         System.setErr(redirectOutput);
     }
 
+    /**
+     * Log a message to the console.
+     * @param severity How important the message is.
+     * @param message The message itself.
+     */
     public static void log(LogSeverity severity, String message) {
         log.add(new LogPair(severity, message));
         if (severity.ordinal() <= Settings.LogLevel.ordinal()) {
@@ -36,6 +45,10 @@ public class Logger {
         }
     }
 
+    /**
+     * Get a <code>TesterPrintStream</code> which masquerades the default <code>PrintStream</code>s.
+     * @return The main <code>TesterPrintStream</code>.
+     */
     public static TesterPrintStream getSystemRedirect() {
         return redirectOutput;
     }

@@ -2,6 +2,9 @@ package com.williamle.modulr.stipulator.logging;
 
 import java.io.PrintStream;
 
+/**
+ * A class that replaces the default <code>PrintStream</code>s to reduce output spam.
+ */
 public class TesterPrintStream extends PrintStream {
 
     private final StringBuffer buffer;
@@ -115,6 +118,10 @@ public class TesterPrintStream extends PrintStream {
         this.println();
     }
 
+    /**
+     * Get all data stored in the buffer, then empty it.
+     * @return A string containing the printed information.
+     */
     public String getAndFlush() {
         var output = buffer.toString();
         buffer.setLength(0);

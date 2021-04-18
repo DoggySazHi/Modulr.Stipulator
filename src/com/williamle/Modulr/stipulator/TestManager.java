@@ -191,16 +191,16 @@ public class TestManager {
         var start = System.nanoTime();
         try {
             //TODO An attribute to annotate constructors that Modulr.Stipulator should use?
+            // Sort by accessibility (mainly to avoid trying to call private constructors)
             var constructor = Arrays.stream(testSuite.getTester().getDeclaredConstructors())
                     .filter(o -> o.getParameterCount() == 0)
-                    .sorted(Comparator.comparingInt(a -> {
+                    .min(Comparator.comparingInt(a -> {
                         if (Modifier.isPublic(a.getModifiers()))
                             return 3;
                         if (Modifier.isProtected(a.getModifiers()))
                             return 2;
                         return 1;
-                    })) // Sort by accessibility (mainly to avoid trying to call private constructors)
-                    .findFirst()
+                    }))
                     .orElseThrow(() -> new BadTesterException(testSuite.getClass(), "No suitable empty constructor found"));
             return constructor.newInstance();
         } catch (Throwable ex) {

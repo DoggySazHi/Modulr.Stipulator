@@ -4,9 +4,9 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("ALL")
 public class BasicTest {
     @Test
-    @SuppressWarnings("ObviousNullCheck")
     public static void staticTestMethod() {
         assertTrue(true);
         assertFalse(false);
@@ -16,7 +16,6 @@ public class BasicTest {
     }
 
     @Test
-    @SuppressWarnings("ObviousNullCheck")
     public void nonStaticTestMethod() {
         assertTrue(true);
         assertFalse(false);
