@@ -33,6 +33,7 @@ public class TestManager {
     private Consumer<TestManager> onEndAll;
 
     private static final Class<org.junit.jupiter.api.Test> TEST_ANNOTATION = org.junit.jupiter.api.Test.class;
+    private static final Class<org.junit.Test> OLD_TEST_ANNOTATION = org.junit.Test.class;
 
     public TestManager() {
         this(Thread.currentThread().getContextClassLoader());
@@ -126,7 +127,12 @@ public class TestManager {
                 var classObj = classLoader.loadClass(c.replace(".class", ""));
                 // Get methods with attribute.
                 var testMethods = Arrays.stream(classObj.getMethods())
-                        .filter(o -> o.isAnnotationPresent(TEST_ANNOTATION)).collect(Collectors.toList());
+                        .filter(o -> {
+                            if (o.isAnnotationPresent(TEST_ANNOTATION) || o.isAnnotationPresent(OLD_TEST_ANNOTATION))
+                                return true;
+                            return classObj.getSuperclass().equals(junit.framework.TestCase.class) && o.getName().startsWith("test");
+                        })
+                        .collect(Collectors.toList());
                 if (testMethods.size() > 0) {
                     var test = new Test(classObj.getName(), classObj);
                     for (var testMethod : testMethods) {
