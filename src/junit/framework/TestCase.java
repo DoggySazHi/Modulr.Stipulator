@@ -1,8 +1,9 @@
 package junit.framework;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.Assert;
 
 // Only exists for drop-in compatibility with JUnit 4.
-public class TestCase extends Assertions {
+@SuppressWarnings("unused") // Fufu.
+public class TestCase extends Assert {
 
 }

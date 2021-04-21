@@ -278,219 +278,241 @@ public class Assertions {
         assertArrayEquals(expected, actual, null);
     }
 
+    // assertSame
+
+    public static void assertSame(Object expected, Object actual, String message) {
+        if (expected != actual)
+            throw new AssertionFailedException(expected + "", actual + "", message);
+    }
+
+    public static void assertSame(Object expected, Object actual) {
+        assertSame(expected, actual, null);
+    }
+
     // assertNotEquals
 
-    private static AssertionFailedException failNotEquals(String expected, String actual, String message) {
-        return new AssertionFailedException((message != null ? "\n- " + message + "\n- " : "") + "Didn't expect equality between [" + expected + "] but was! [" + actual + "]");
+    private static AssertionFailedException failNotEquals(String unexpected, String actual, String message) {
+        return new AssertionFailedException((message != null ? "\n- " + message + "\n- " : "") + "Didn't expect equality between [" + unexpected + "] but was! [" + actual + "]");
     }
 
-    private static AssertionFailedException failNotEquals(String expected, String actual) { return failNotEquals(expected, actual, null); }
+    private static AssertionFailedException failNotEquals(String unexpected, String actual) { return failNotEquals(unexpected, actual, null); }
 
-    public static void assertNotEquals(boolean expected, boolean actual, String message) {
-        if (expected == actual)
-            throw failNotEquals(expected + "", actual + "", message);
+    public static void assertNotEquals(boolean unexpected, boolean actual, String message) {
+        if (unexpected == actual)
+            throw failNotEquals(unexpected + "", actual + "", message);
     }
 
-    public static void assertNotEquals(boolean expected, boolean actual) {
-        assertNotEquals(expected, actual, null);
+    public static void assertNotEquals(boolean unexpected, boolean actual) {
+        assertNotEquals(unexpected, actual, null);
     }
 
-    public static void assertNotEquals(byte expected, byte actual, String message) {
-        if (expected == actual)
-            throw failNotEquals(expected + "", actual + "", message);
+    public static void assertNotEquals(byte unexpected, byte actual, String message) {
+        if (unexpected == actual)
+            throw failNotEquals(unexpected + "", actual + "", message);
     }
 
-    public static void assertNotEquals(byte expected, byte actual) {
-        assertNotEquals(expected, actual, null);
+    public static void assertNotEquals(byte unexpected, byte actual) {
+        assertNotEquals(unexpected, actual, null);
     }
 
-    public static void assertNotEquals(char expected, char actual, String message) {
-        if (expected == actual)
-            throw failNotEquals(expected + "", actual + "", message);
+    public static void assertNotEquals(char unexpected, char actual, String message) {
+        if (unexpected == actual)
+            throw failNotEquals(unexpected + "", actual + "", message);
     }
 
-    public static void assertNotEquals(char expected, char actual) {
-        assertNotEquals(expected, actual, null);
+    public static void assertNotEquals(char unexpected, char actual) {
+        assertNotEquals(unexpected, actual, null);
     }
 
-    public static void assertNotEquals(double expected, double actual, double delta, String message) {
-        if (Math.abs(expected - actual) <= delta)
-            throw failNotEquals(expected + "", actual + "", message);
+    public static void assertNotEquals(double unexpected, double actual, double delta, String message) {
+        if (Math.abs(unexpected - actual) <= delta)
+            throw failNotEquals(unexpected + "", actual + "", message);
     }
 
-    public static void assertNotEquals(double expected, double actual, double delta) {
-        assertNotEquals(expected, actual, delta, null);
+    public static void assertNotEquals(double unexpected, double actual, double delta) {
+        assertNotEquals(unexpected, actual, delta, null);
     }
 
-    public static void assertNotEquals(double expected, double actual, String message) {
-        assertNotEquals(expected, actual, 0, message);
+    public static void assertNotEquals(double unexpected, double actual, String message) {
+        assertNotEquals(unexpected, actual, 0, message);
     }
 
-    public static void assertNotEquals(double expected, double actual) {
-        assertNotEquals(expected, actual, null);
+    public static void assertNotEquals(double unexpected, double actual) {
+        assertNotEquals(unexpected, actual, null);
     }
 
-    public static void assertNotEquals(float expected, float actual, float delta, String message) {
-        if (Math.abs(expected - actual) <= delta)
-            throw failNotEquals(expected + "", actual + "", message);
+    public static void assertNotEquals(float unexpected, float actual, float delta, String message) {
+        if (Math.abs(unexpected - actual) <= delta)
+            throw failNotEquals(unexpected + "", actual + "", message);
     }
 
-    public static void assertNotEquals(float expected, float actual, String message) {
-        assertNotEquals(expected, actual, 0, message);
+    public static void assertNotEquals(float unexpected, float actual, String message) {
+        assertNotEquals(unexpected, actual, 0, message);
     }
 
-    public static void assertNotEquals(float expected, float actual, float delta) {
-        assertNotEquals(expected, actual, delta, null);
+    public static void assertNotEquals(float unexpected, float actual, float delta) {
+        assertNotEquals(unexpected, actual, delta, null);
     }
 
-    public static void assertNotEquals(float expected, float actual) {
-        assertNotEquals(expected, actual, null);
+    public static void assertNotEquals(float unexpected, float actual) {
+        assertNotEquals(unexpected, actual, null);
     }
 
-    public static void assertNotEquals(short expected, short actual, String message) {
-        if (expected == actual)
-            throw failNotEquals(expected + "", actual + "", message);
+    public static void assertNotEquals(short unexpected, short actual, String message) {
+        if (unexpected == actual)
+            throw failNotEquals(unexpected + "", actual + "", message);
     }
 
-    public static void assertNotEquals(short expected, short actual) {
-        assertNotEquals(expected, actual, null);
+    public static void assertNotEquals(short unexpected, short actual) {
+        assertNotEquals(unexpected, actual, null);
     }
 
-    public static void assertNotEquals(int expected, int actual, String message) {
-        if (expected == actual)
-            throw failNotEquals(expected + "", actual + "", message);
+    public static void assertNotEquals(int unexpected, int actual, String message) {
+        if (unexpected == actual)
+            throw failNotEquals(unexpected + "", actual + "", message);
     }
 
-    public static void assertNotEquals(int expected, int actual) {
-        assertNotEquals(expected, actual, null);
+    public static void assertNotEquals(int unexpected, int actual) {
+        assertNotEquals(unexpected, actual, null);
     }
 
-    public static void assertNotEquals(long expected, long actual, String message) {
-        if (expected == actual)
-            throw failNotEquals(expected + "", actual + "", message);
+    public static void assertNotEquals(long unexpected, long actual, String message) {
+        if (unexpected == actual)
+            throw failNotEquals(unexpected + "", actual + "", message);
     }
 
-    public static void assertNotEquals(long expected, long actual) {
-        assertNotEquals(expected, actual, null);
+    public static void assertNotEquals(long unexpected, long actual) {
+        assertNotEquals(unexpected, actual, null);
     }
 
-    public static void assertNotEquals(Object expected, Object actual, String message) {
-        var exception = failNotEquals(toStringObj(expected), toStringObj(actual), message);
-        if ((expected == null) ^ (actual == null)) // If only one is null, return early.
+    public static void assertNotEquals(Object unexpected, Object actual, String message) {
+        var exception = failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
+        if ((unexpected == null) ^ (actual == null)) // If only one is null, return early.
             return;
-        if (expected == null) // If both are null, raise the exception.
+        if (unexpected == null) // If both are null, raise the exception.
             throw exception;
-        if (expected.getClass().isArray() && actual.getClass().isArray()) {
-            assertArrayEquals((Object[]) expected, (Object[]) actual, message);
+        if (unexpected.getClass().isArray() && actual.getClass().isArray()) {
+            assertArrayEquals((Object[]) unexpected, (Object[]) actual, message);
             return; // So we don't fall into the next part; an exception would be thrown by assertArrayEquals
         }
-        if (Objects.equals(expected, actual))
+        if (Objects.equals(unexpected, actual))
             throw exception;
     }
 
-    public static void assertNotEquals(Object expected, Object actual) {
-        assertNotEquals(expected, actual, null);
+    public static void assertNotEquals(Object unexpected, Object actual) {
+        assertNotEquals(unexpected, actual, null);
     }
 
     // assertArrayNotEquals
 
-    public static void assertArrayNotEquals(boolean[] expected, boolean[] actual, String message) {
-        if (Arrays.equals(expected, actual))
-            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
+    public static void assertArrayNotEquals(boolean[] unexpected, boolean[] actual, String message) {
+        if (Arrays.equals(unexpected, actual))
+            throw failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
     }
 
-    public static void assertArrayNotEquals(boolean[] expected, boolean[] actual) {
-        assertArrayNotEquals(expected, actual, null);
+    public static void assertArrayNotEquals(boolean[] unexpected, boolean[] actual) {
+        assertArrayNotEquals(unexpected, actual, null);
     }
 
-    public static void assertArrayNotEquals(byte[] expected, byte[] actual, String message) {
-        if (Arrays.equals(expected, actual))
-            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
+    public static void assertArrayNotEquals(byte[] unexpected, byte[] actual, String message) {
+        if (Arrays.equals(unexpected, actual))
+            throw failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
     }
 
-    public static void assertArrayNotEquals(byte[] expected, byte[] actual) {
-        assertArrayNotEquals(expected, actual, null);
+    public static void assertArrayNotEquals(byte[] unexpected, byte[] actual) {
+        assertArrayNotEquals(unexpected, actual, null);
     }
 
-    public static void assertArrayNotEquals(char[] expected, char[] actual, String message) {
-        if (Arrays.equals(expected, actual))
-            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
+    public static void assertArrayNotEquals(char[] unexpected, char[] actual, String message) {
+        if (Arrays.equals(unexpected, actual))
+            throw failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
     }
 
-    public static void assertArrayNotEquals(char[] expected, char[] actual) {
-        assertArrayNotEquals(expected, actual, null);
+    public static void assertArrayNotEquals(char[] unexpected, char[] actual) {
+        assertArrayNotEquals(unexpected, actual, null);
     }
 
     @SuppressWarnings("DuplicatedCode") // Because I don't know the best way other than actually repeating.
-    public static void assertArrayNotEquals(double[] expected, double[] actual, String message, double delta) {
-        var exception = failNotEquals(toStringObj(expected), toStringObj(actual), message);
-        if (expected.length != actual.length)
+    public static void assertArrayNotEquals(double[] unexpected, double[] actual, String message, double delta) {
+        var exception = failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
+        if (unexpected.length != actual.length)
             throw exception;
-        for (var i = 0; i < expected.length; i++)
-            if (Math.abs(expected[i] - actual[i]) > delta)
+        for (var i = 0; i < unexpected.length; i++)
+            if (Math.abs(unexpected[i] - actual[i]) > delta)
                 throw exception;
     }
 
-    public static void assertArrayNotEquals(double[] expected, double[] actual, String message) {
-        assertArrayNotEquals(expected, actual, message, 0);
+    public static void assertArrayNotEquals(double[] unexpected, double[] actual, String message) {
+        assertArrayNotEquals(unexpected, actual, message, 0);
     }
 
-    public static void assertArrayNotEquals(double[] expected, double[] actual, double delta) {
-        assertArrayNotEquals(expected, actual, null, delta);
+    public static void assertArrayNotEquals(double[] unexpected, double[] actual, double delta) {
+        assertArrayNotEquals(unexpected, actual, null, delta);
     }
 
     @SuppressWarnings("DuplicatedCode")
-    public static void assertArrayNotEquals(float[] expected, float[] actual, String message, float delta) {
-        var exception = failNotEquals(toStringObj(expected), toStringObj(actual), message);
-        if (expected.length != actual.length)
+    public static void assertArrayNotEquals(float[] unexpected, float[] actual, String message, float delta) {
+        var exception = failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
+        if (unexpected.length != actual.length)
             throw exception;
-        for (var i = 0; i < expected.length; i++)
-            if (Math.abs(expected[i] - actual[i]) > delta)
+        for (var i = 0; i < unexpected.length; i++)
+            if (Math.abs(unexpected[i] - actual[i]) > delta)
                 throw exception;
     }
 
-    public static void assertArrayNotEquals(float[] expected, float[] actual, String message) {
-        assertArrayNotEquals(expected, actual, message, 0);
+    public static void assertArrayNotEquals(float[] unexpected, float[] actual, String message) {
+        assertArrayNotEquals(unexpected, actual, message, 0);
     }
 
-    public static void assertArrayNotEquals(float[] expected, float[] actual, float delta) {
-        assertArrayNotEquals(expected, actual, null, delta);
+    public static void assertArrayNotEquals(float[] unexpected, float[] actual, float delta) {
+        assertArrayNotEquals(unexpected, actual, null, delta);
     }
 
-    public static void assertArrayNotEquals(short[] expected, short[] actual, String message) {
-        if (Arrays.equals(expected, actual))
-            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
+    public static void assertArrayNotEquals(short[] unexpected, short[] actual, String message) {
+        if (Arrays.equals(unexpected, actual))
+            throw failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
     }
 
-    public static void assertArrayNotEquals(short[] expected, short[] actual) {
-        assertArrayNotEquals(expected, actual, null);
+    public static void assertArrayNotEquals(short[] unexpected, short[] actual) {
+        assertArrayNotEquals(unexpected, actual, null);
     }
 
-    public static void assertArrayNotEquals(int[] expected, int[] actual, String message) {
-        if (Arrays.equals(expected, actual))
-            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
+    public static void assertArrayNotEquals(int[] unexpected, int[] actual, String message) {
+        if (Arrays.equals(unexpected, actual))
+            throw failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
     }
 
-    public static void assertArrayNotEquals(int[] expected, int[] actual) {
-        assertArrayNotEquals(expected, actual, null);
+    public static void assertArrayNotEquals(int[] unexpected, int[] actual) {
+        assertArrayNotEquals(unexpected, actual, null);
     }
 
-    public static void assertArrayNotEquals(long[] expected, long[] actual, String message) {
-        if (Arrays.equals(expected, actual))
-            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
+    public static void assertArrayNotEquals(long[] unexpected, long[] actual, String message) {
+        if (Arrays.equals(unexpected, actual))
+            throw failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
     }
 
-    public static void assertArrayNotEquals(long[] expected, long[] actual) {
-        assertArrayNotEquals(expected, actual, null);
+    public static void assertArrayNotEquals(long[] unexpected, long[] actual) {
+        assertArrayNotEquals(unexpected, actual, null);
     }
 
-    public static void assertArrayNotEquals(Object[] expected, Object[] actual, String message) {
-        if (Arrays.equals(expected, actual))
-            throw failNotEquals(toStringObj(expected), toStringObj(actual), message);
+    public static void assertArrayNotEquals(Object[] unexpected, Object[] actual, String message) {
+        if (Arrays.equals(unexpected, actual))
+            throw failNotEquals(toStringObj(unexpected), toStringObj(actual), message);
     }
 
-    public static void assertArrayNotEquals(Object[] expected, Object[] actual) {
-        assertArrayNotEquals(expected, actual, null);
+    public static void assertArrayNotEquals(Object[] unexpected, Object[] actual) {
+        assertArrayNotEquals(unexpected, actual, null);
+    }
+
+    // assertNotSame
+
+    public static void assertNotSame(Object expected, Object actual, String message) {
+        if (expected == actual)
+            throw new AssertionFailedException(expected + "", actual + "", message);
+    }
+
+    public static void assertNotSame(Object expected, Object actual) {
+        assertNotSame(expected, actual, null);
     }
 
     // assertThrows
