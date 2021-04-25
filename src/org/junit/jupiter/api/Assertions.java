@@ -15,7 +15,7 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 
 // Only exists for drop-in compatibility with JUnit 5.
-@SuppressWarnings("unused") // Also it's a library class, darn it!
+
 public class Assertions {
 
     public static void fail() {

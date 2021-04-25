@@ -125,16 +125,23 @@ public class TestManager {
         for (var c : toLoad) {
             try {
                 var classObj = classLoader.loadClass(c.replace(".class", ""));
-                // Get methods with attribute.
-                var testMethods = Arrays.stream(classObj.getMethods())
-                        .filter(o -> {
-                            if (o.isAnnotationPresent(TEST_ANNOTATION) || o.isAnnotationPresent(OLD_TEST_ANNOTATION))
-                                return true;
-                            return classObj.getSuperclass().equals(junit.framework.TestCase.class) && o.getName().startsWith("test");
-                        })
-                        .collect(Collectors.toList());
+                var testMethods = new ArrayList<Method>();
+                Method setUpMethod = null;
+                Method tearDownMethod = null;
+                for (var method : classObj.getMethods()) {
+                    if (method.isAnnotationPresent(TEST_ANNOTATION) || method.isAnnotationPresent(OLD_TEST_ANNOTATION))
+                        testMethods.add(method);
+                    else if (junit.framework.TestCase.class.isAssignableFrom(classObj) && method.getName().startsWith("test"))
+                        testMethods.add(method);
+                    else if (!Modifier.isPrivate(method.getModifiers())) {
+                        if (method.getName().equals("setUp"))
+                            setUpMethod = method;
+                        else if (method.getName().equals("tearDown"))
+                            tearDownMethod = method;
+                    }
+                }
                 if (testMethods.size() > 0) {
-                    var test = new Test(classObj.getName(), classObj);
+                    var test = new Test(classObj.getName(), classObj, setUpMethod, tearDownMethod);
                     for (var testMethod : testMethods) {
                         test.registerTest(testMethod);
                     }
@@ -146,10 +153,21 @@ public class TestManager {
         }
     }
 
+    /**
+     * Run all tests available in the TestManager.
+     */
     public void execute() {
         triggerCallback(onStartAll, this);
         for (var testSuite : loadedTests) {
             var instance = getInstance(testSuite);
+
+            try {
+                testSuite.setUp(instance);
+            }
+            catch (Throwable ex) {
+                ex = getTrueCause(ex);
+                Logger.log(LogSeverity.ERROR, "Error occurred while setting up suite!\n- " + getMessage(ex));
+            }
 
             triggerCallback(onStartSuite, testSuite);
             for(var method : testSuite.getTestRelation().keySet()) {
@@ -162,10 +180,7 @@ public class TestManager {
                         throw new BadTesterException("No suitable empty constructor found for non-static method");
                     method.invoke(instance);
                 } catch (Throwable ex) {
-                    if (ex instanceof InvocationTargetException) {
-                        var trueEx = (InvocationTargetException) ex;
-                        ex = trueEx.getCause();
-                    }
+                    ex = getTrueCause(ex);
 
                     testSuite.setResults(
                             method,
@@ -182,6 +197,15 @@ public class TestManager {
                 testSuite.setResults(method, new Test.Result(true, System.nanoTime() - start));
                 triggerCallback(onEndTest, method);
             }
+
+            try {
+                testSuite.tearDown(instance);
+            }
+            catch (Throwable ex) {
+                ex = getTrueCause(ex);
+                Logger.log(LogSeverity.ERROR, "Error occurred while tearing down suite!\n- " + getMessage(ex));
+            }
+
             triggerCallback(onEndSuite, testSuite);
         }
         triggerCallback(onEndAll, this);
@@ -196,7 +220,7 @@ public class TestManager {
     private Object getInstance(Test testSuite) {
         var start = System.nanoTime();
         try {
-            //TODO An attribute to annotate constructors that Modulr.Stipulator should use?
+            // TODO An attribute to annotate constructors that Modulr.Stipulator should use?
             // Sort by accessibility (mainly to avoid trying to call private constructors)
             var constructor = Arrays.stream(testSuite.getTester().getDeclaredConstructors())
                     .filter(o -> o.getParameterCount() == 0)
@@ -227,6 +251,30 @@ public class TestManager {
         return null;
     }
 
+    /**
+     * Unwraps exceptions a bit.
+     * @param ex An exception.
+     * @return An unwrapped exception.
+     */
+    private Throwable getTrueCause(Throwable ex) {
+        if (ex instanceof RuntimeException) {
+            var trueEx = ex.getCause();
+            if (trueEx != null)
+                ex = trueEx;
+        }
+        if (ex instanceof InvocationTargetException) {
+            var trueEx = ex.getCause();
+            if (trueEx != null)
+                ex = trueEx;
+        }
+        return ex;
+    }
+
+    /**
+     * Generate a message for an error thrown.
+     * @param ex A <code>Throwable</code> representing what the test method threw.
+     * @return A human-readable message.
+     */
     private String getMessage(Throwable ex) {
         if (ex instanceof TestFailureException) {
             return ex.getClass().getSimpleName() +

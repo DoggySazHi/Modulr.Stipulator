@@ -10,11 +10,19 @@ public class Test {
     private final String name;
     private final Class<?> tester;
     private final Map<Method, Result> data;
+    private final Method setUp;
+    private final Method tearDown;
 
-    public Test(String name, Class<?> tester) {
+    public Test(String name, Class<?> tester, Method setUp, Method tearDown) {
         this.name = name;
         this.tester = tester;
         data = new HashMap<>();
+        this.setUp = setUp;
+        this.tearDown = tearDown;
+    }
+
+    public Test(String name, Class<?> tester) {
+        this(name, tester, null, null);
     }
 
     public static class Result {
@@ -124,5 +132,35 @@ public class Test {
      */
     public Map<Method, Result> getTestRelation() {
         return Collections.unmodifiableMap(data);
+    }
+
+    /**
+     * Call the JUnit <code>setUp</code> method.
+     * @param o An object, if it exists.
+     */
+    public void setUp(Object o) {
+        if (setUp == null)
+            return;
+        try {
+            setUp.invoke(o);
+        } catch (Throwable t) {
+            // Leave that up to the TestManager.
+            throw new RuntimeException(t);
+        }
+    }
+
+    /**
+     * Call the JUnit <code>tearDown</code> method.
+     * @param o An object, if it exists.
+     */
+    public void tearDown(Object o) {
+        if (tearDown == null)
+            return;
+        try {
+            tearDown.invoke(o);
+        } catch (Throwable t) {
+            // Leave that up to the TestManager.
+            throw new RuntimeException(t);
+        }
     }
 }
