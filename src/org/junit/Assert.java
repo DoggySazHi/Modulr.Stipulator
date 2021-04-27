@@ -38,28 +38,36 @@ public class Assert {
         Assertions.assertArrayEquals(expected, actual);
     }
 
-    public static void assertArrayEquals(String message, String[] expected, String[] actual) {
-        Assertions.assertArrayEquals(expected, actual, message);
-    }
-
-    public static void assertArrayEquals(String[] expected, String[] actual) {
-        Assertions.assertArrayEquals(expected, actual);
-    }
-
     public static void assertArrayEquals(String message, double[] expected, double[] actual, double delta) {
         Assertions.assertArrayEquals(expected, actual, message, delta);
+    }
+
+    public static void assertArrayEquals(String message, double[] expected, double[] actual) {
+        Assertions.assertArrayEquals(expected, actual, message);
     }
 
     public static void assertArrayEquals(double[] expected, double[] actual, double delta) {
         Assertions.assertArrayEquals(expected, actual, delta);
     }
 
+    public static void assertArrayEquals(double[] expected, double[] actual) {
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
     public static void assertArrayEquals(String message, float[] expected, float[] actual, float delta) {
         Assertions.assertArrayEquals(expected, actual, message, delta);
     }
 
+    public static void assertArrayEquals(String message, float[] expected, float[] actual) {
+        Assertions.assertArrayEquals(expected, actual, message);
+    }
+
     public static void assertArrayEquals(float[] expected, float[] actual, float delta) {
         Assertions.assertArrayEquals(expected, actual, delta);
+    }
+
+    public static void assertArrayEquals(float[] expected, float[] actual) {
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     public static void assertArrayEquals(String message, long[] expected, long[] actual) {

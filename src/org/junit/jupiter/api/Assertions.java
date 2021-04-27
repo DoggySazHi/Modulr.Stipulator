@@ -224,6 +224,10 @@ public class Assertions {
         assertArrayEquals(expected, actual, null, delta);
     }
 
+    public static void assertArrayEquals(double[] expected, double[] actual) {
+        assertArrayEquals(expected, actual, null, 0);
+    }
+
     @SuppressWarnings("DuplicatedCode")
     public static void assertArrayEquals(float[] expected, float[] actual, String message, float delta) {
         var exception = new AssertionFailedException(toStringObj(expected), toStringObj(actual), message);
@@ -240,6 +244,10 @@ public class Assertions {
 
     public static void assertArrayEquals(float[] expected, float[] actual, float delta) {
         assertArrayEquals(expected, actual, null, delta);
+    }
+
+    public static void assertArrayEquals(float[] expected, float[] actual) {
+        assertArrayEquals(expected, actual, null, 0);
     }
 
     public static void assertArrayEquals(short[] expected, short[] actual, String message) {
