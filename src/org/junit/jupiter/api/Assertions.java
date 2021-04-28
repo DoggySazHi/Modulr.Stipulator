@@ -1,5 +1,6 @@
 package org.junit.jupiter.api;
 
+import com.williamle.modulr.stipulator.models.LogSeverity;
 import com.williamle.modulr.stipulator.models.exceptions.AssertionFailedException;
 import com.williamle.modulr.stipulator.models.exceptions.TestFailureException;
 import com.williamle.modulr.stipulator.models.exceptions.TimeoutException;
@@ -629,6 +630,7 @@ public class Assertions {
                 return obj.toString();
             }
             catch (Exception ignore) {
+                if (Settings.LogLevel == LogSeverity.VERBOSE)
                 return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj)) + " (toString failed)";
             }
         }
