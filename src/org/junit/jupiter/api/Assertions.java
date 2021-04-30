@@ -1,5 +1,6 @@
 package org.junit.jupiter.api;
 
+import com.williamle.modulr.stipulator.logging.Logger;
 import com.williamle.modulr.stipulator.models.LogSeverity;
 import com.williamle.modulr.stipulator.models.exceptions.AssertionFailedException;
 import com.williamle.modulr.stipulator.models.exceptions.TestFailureException;
@@ -7,6 +8,7 @@ import com.williamle.modulr.stipulator.models.exceptions.TimeoutException;
 import com.williamle.modulr.stipulator.models.Executable;
 import com.williamle.modulr.stipulator.Settings;
 
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
@@ -626,14 +628,44 @@ public class Assertions {
         else if (Settings.UseToString) {
             try {
                 if (obj.getClass().isArray())
-                    return Arrays.deepToString((Object[]) obj);
+                    return toStringArr(obj);
                 return obj.toString();
             }
-            catch (Exception ignore) {
-                if (Settings.LogLevel == LogSeverity.VERBOSE)
+            catch (Exception ex) {
+                Logger.log(LogSeverity.VERBOSE, ex.toString());
                 return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj)) + " (toString failed)";
             }
         }
         return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
+    }
+
+    private static final Class<?>[] PRIMITIVE_ARRAYS = {
+            boolean[].class,
+            byte[].class,
+            char[].class,
+            double[].class,
+            float[].class,
+            int[].class,
+            long[].class,
+            short[].class
+    };
+
+    private static String toStringArr(Object obj) {
+        Class<?> classObj = obj.getClass();
+        Object[] out = null;
+
+        for(Class<?> arrKlass : PRIMITIVE_ARRAYS){
+            if(classObj.isAssignableFrom(arrKlass)){
+                int length = Array.getLength(obj);
+                out = new Object[length];
+                for(int i = 0; i < length; ++i)
+                    out[i] = Array.get(obj, i);
+            }
+        }
+
+        if (out == null)
+            out = (Object[]) obj;
+
+        return Arrays.deepToString(out);
     }
 }
